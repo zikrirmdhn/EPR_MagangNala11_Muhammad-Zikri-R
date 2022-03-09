@@ -1,0 +1,31 @@
+import cv2 as cv
+from matplotlib import pyplot as plt
+import numpy as np
+
+gambar1 = cv.imread('quest1.png')
+cv.imshow('gambar1', gambar1)
+
+hasil1 = cv.imread('result1.png')
+cv.imshow('hasil1', hasil1)
+
+gray = cv.cvtColor(gambar1, cv.COLOR_BGR2GRAY)
+ret,hitamputih = cv.threshold(gray, 20,255, cv.THRESH_BINARY)
+#cv.imshow('hitamputih', hitamputih)
+
+kernel1 = np.ones((3,3), np.uint8)
+
+dilasi = cv.dilate(hitamputih, kernel1, iterations=1)
+erosi = cv.erode(dilasi, kernel1, iterations=3)
+
+kernel2 = np.ones((5,5), np.uint8)
+erosi = cv.erode(erosi, kernel2, iterations=2)
+#cv.imshow('Erosion', erosi)
+
+edges = cv.Canny(erosi,100,200)
+cv.imshow('edges', edges)
+
+dilasi = cv.dilate(edges, kernel2, iterations=1)
+erosi = cv.erode(dilasi, kernel1, iterations=1)
+cv.imshow('final', erosi)
+
+cv.waitKey(0)
